@@ -1,0 +1,628 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mutuku Stephen | IT Student Portfolio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#10B981', // Emerald 500 (Developer Green)
+                        secondary: '#6366F1', // Indigo 500
+                        dark: '#0F172A', // Slate 900 (Main Background)
+                        card: '#1E293B', // Slate 800 (Card Background)
+                        editor: '#1e1e1e', // VS Code Background
+                        text: '#E2E8F0', // Slate 200
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        mono: ['Fira Code', 'monospace'],
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Fira+Code&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0F172A;
+            color: #E2E8F0;
+        }
+        .code-font {
+            font-family: 'Fira Code', monospace;
+        }
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0F172A;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #334155;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #475569;
+        }
+        /* Blinking Cursor */
+        .cursor {
+            display: inline-block;
+            width: 8px;
+            height: 1.2em;
+            background-color: #10B981;
+            animation: blink 1s infinite;
+            vertical-align: middle;
+        }
+        .cursor-text {
+            display: inline-block;
+            width: 3px;
+            margin-left: 4px;
+            background-color: #cbd5e1;
+            animation: blink 1s infinite;
+        }
+        @keyframes blink {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0; }
+        }
+        /* Fade In Animation */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        /* Syntax Highlighting Colors */
+        .syntax-keyword { color: #C586C0; } /* Purple */
+        .syntax-variable { color: #9CDCFE; } /* Light Blue */
+        .syntax-string { color: #CE9178; } /* Orange */
+        .syntax-function { color: #DCDCAA; } /* Yellow */
+        .syntax-comment { color: #6A9955; } /* Green */
+        .syntax-number { color: #B5CEA8; } /* Light Green */
+        .syntax-boolean { color: #569CD6; } /* Blue */
+    </style>
+</head>
+<body class="antialiased flex flex-col min-h-screen">
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-dark/90 backdrop-blur-sm border-b border-slate-800 shadow-lg">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0 font-bold text-xl text-primary code-font cursor-pointer hover:text-white transition-colors" onclick="navigateTo('home')">
+                    &lt;MutukuDev /&gt;
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <button onclick="navigateTo('home')" id="nav-home" class="nav-link text-primary font-bold px-3 py-2 rounded-md text-sm transition-colors">Home</button>
+                        <button onclick="navigateTo('about')" id="nav-about" class="nav-link text-slate-400 hover:text-primary transition-colors px-3 py-2 rounded-md text-sm font-medium">About</button>
+                        <button onclick="navigateTo('skills')" id="nav-skills" class="nav-link text-slate-400 hover:text-primary transition-colors px-3 py-2 rounded-md text-sm font-medium">Skills</button>
+                        <button onclick="navigateTo('projects')" id="nav-projects" class="nav-link text-slate-400 hover:text-primary transition-colors px-3 py-2 rounded-md text-sm font-medium">Projects</button>
+                        <button onclick="navigateTo('contact')" id="nav-contact" class="bg-primary hover:bg-green-600 text-dark font-bold px-4 py-2 rounded-md text-sm transition-colors shadow-lg hover:shadow-green-500/20">Contact Me</button>
+                    </div>
+                </div>
+                <div class="-mr-2 flex md:hidden">
+                    <button type="button" onclick="toggleMenu()" class="inline-flex items-center justify-center p-2 rounded-md text-slate-400 hover:text-primary focus:outline-none">
+                        <i class="fas fa-bars text-xl"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div class="md:hidden hidden bg-card border-b border-slate-800 shadow-lg" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <button onclick="navigateTo('home')" class="block w-full text-left hover:bg-slate-700 px-3 py-2 rounded-md text-base font-medium text-primary">Home</button>
+                <button onclick="navigateTo('about')" class="block w-full text-left hover:bg-slate-700 px-3 py-2 rounded-md text-base font-medium text-slate-300">About</button>
+                <button onclick="navigateTo('skills')" class="block w-full text-left hover:bg-slate-700 px-3 py-2 rounded-md text-base font-medium text-slate-300">Skills</button>
+                <button onclick="navigateTo('projects')" class="block w-full text-left hover:bg-slate-700 px-3 py-2 rounded-md text-base font-medium text-slate-300">Projects</button>
+                <button onclick="navigateTo('contact')" class="block w-full text-left text-primary hover:bg-slate-700 px-3 py-2 rounded-md text-base font-medium">Contact</button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow pt-16 relative">
+        
+        <!-- Hero Section (Page) -->
+        <section id="home" class="page-section min-h-[calc(100vh-4rem)] flex items-center justify-center fade-in pb-10">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row items-center gap-12">
+                
+                <!-- Left Text Content -->
+                <div class="md:w-1/2 text-center md:text-left mb-10 md:mb-0">
+                    <div class="inline-block px-3 py-1 mb-4 border border-primary/30 rounded-full bg-primary/10 text-primary text-sm font-medium code-font">
+                        <i class="fas fa-circle text-[8px] mr-2 animate-pulse"></i>Available for Internships
+                    </div>
+                    <h1 class="text-5xl md:text-6xl font-bold text-white mb-4 tracking-tight">
+                        Mutuku Stephen
+                    </h1>
+                    
+                    <!-- Colorful Text Typewriter -->
+                    <h2 class="text-xl md:text-3xl text-slate-300 mb-6 font-medium flex items-center justify-center md:justify-start min-h-[40px]">
+                        I build <span id="hero-typewriter" class="ml-2 font-bold border-b-2 border-transparent"></span><span class="cursor-text">&nbsp;</span>
+                    </h2>
+
+                    <p class="text-slate-400 max-w-lg mx-auto md:mx-0 mb-8 text-lg leading-relaxed">
+                        Full Stack Developer & IT Specialist creating secure, scalable web applications and cloud infrastructure.
+                    </p>
+                    <div class="flex flex-col sm:flex-row gap-4 justify-center md:justify-start">
+                        <button onclick="navigateTo('projects')" class="px-8 py-3 bg-primary text-dark font-bold rounded-lg hover:bg-green-400 transition-all shadow-lg hover:shadow-primary/25">
+                            View Projects
+                        </button>
+                    </div>
+                    
+                    <!-- Social Icons Hero Row -->
+                    <div class="mt-8 flex gap-6 justify-center md:justify-start text-2xl text-slate-500">
+                        <a href="https://github.com/mutukustephen" target="_blank" class="hover:text-white hover:scale-110 transition-all" title="GitHub"><i class="fab fa-github"></i></a>
+                        <a href="https://www.linkedin.com/in/mutukustephen624" target="_blank" class="hover:text-white hover:scale-110 transition-all" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                        <a href="https://instagram.com/stephen_tux" target="_blank" class="hover:text-white hover:scale-110 transition-all" title="Instagram"><i class="fab fa-instagram"></i></a>
+                        <a href="https://wa.me/254797229461" target="_blank" class="hover:text-white hover:scale-110 transition-all" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                        <a href="tel:+254797229461" class="hover:text-white hover:scale-110 transition-all" title="Call Me"><i class="fas fa-phone"></i></a>
+                        <a href="mailto:mutukustephen624@gmail.com" class="hover:text-white hover:scale-110 transition-all" title="Email Me"><i class="fas fa-envelope"></i></a>
+                    </div>
+                </div>
+
+                <!-- Right Side: VS Code -->
+                <div class="md:w-1/2 w-full flex flex-col gap-6 justify-center relative">
+                    
+                    <!-- VS Code Window -->
+                    <div class="relative w-full max-w-lg mx-auto bg-editor rounded-lg shadow-2xl border border-slate-700 overflow-hidden font-mono text-sm md:text-base">
+                        <!-- Glow Effect for VS Code -->
+                        <div class="absolute -inset-1 bg-gradient-to-r from-primary to-secondary rounded-lg blur opacity-10 -z-10"></div>
+                        
+                        <!-- Title Bar -->
+                        <div class="bg-[#252526] px-4 py-2 flex items-center gap-2 border-b border-[#333]">
+                            <div class="flex gap-2 mr-4">
+                                <div class="w-3 h-3 rounded-full bg-[#ff5f56]"></div>
+                                <div class="w-3 h-3 rounded-full bg-[#ffbd2e]"></div>
+                                <div class="w-3 h-3 rounded-full bg-[#27c93f]"></div>
+                            </div>
+                            <div class="text-slate-400 text-xs flex-grow text-center">portfolio.js — Visual Studio Code</div>
+                        </div>
+                        
+                        <!-- Editor Area -->
+                        <div class="p-4 min-h-[280px] text-slate-300 overflow-hidden">
+                            <div class="flex">
+                                <!-- Line Numbers -->
+                                <div class="text-slate-600 mr-4 text-right select-none pr-2 border-r border-slate-700 font-mono text-xs sm:text-sm leading-6">
+                                    1<br>2<br>3<br>4<br>5<br>6<br>7<br>8<br>9
+                                </div>
+                                <!-- Code Content -->
+                                <div id="code-typewriter" class="w-full font-mono text-xs sm:text-sm leading-6 whitespace-pre">
+                                    <!-- Content injected by JS -->
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Status Bar -->
+                        <div class="bg-primary text-dark text-[10px] px-3 py-1 flex justify-between font-bold">
+                            <div class="flex gap-4">
+                                <span><i class="fas fa-code-branch mr-1"></i>main</span>
+                                <span><i class="fas fa-check-circle mr-1"></i>Ready</span>
+                            </div>
+                            <div>UTF-8</div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section (Page) -->
+        <section id="about" class="page-section hidden min-h-[calc(100vh-4rem)] flex items-center justify-center py-10 fade-in">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+                
+                <!-- Section Header (Clean, no icons) -->
+                <h2 class="text-3xl font-bold text-white mb-8 flex items-center">
+                    <span class="text-primary mr-2 code-font">01.</span> About Me
+                    <span class="h-px bg-slate-700 flex-grow ml-6"></span>
+                </h2>
+
+                <div class="grid md:grid-cols-3 gap-12">
+                    <div class="md:col-span-2 text-slate-300 leading-relaxed space-y-4">
+                        <p>
+                            Hello! I am <span class="text-white font-bold">Stephen Nthiwa Mutuku</span>, a passionate IT student based in Kenya.
+                        </p>
+                        <p>
+                            I am currently pursuing a <span class="text-primary font-bold">Bachelor of Science in Information Technology</span> at <span class="text-white">Meru University of Science and Technology</span> (2024-2028). My academic journey has equipped me with a strong foundation in web design and programming.
+                        </p>
+                        <p>
+                            Beyond the classroom, I am an active member of the <span class="text-secondary">Statistics Club</span> at Meru University, participating in data analysis activities. I also contributed to the web design for a student course registration project.
+                        </p>
+                        <p>
+                           I am currently seeking my first professional experience as part of an internship program. My hobbies include coding, reading tech blogs, watching IT tutorials, and volunteering in community-based programs.
+                        </p>
+                    </div>
+                    <div>
+                        <div class="bg-card p-6 rounded-lg border border-slate-700 h-full">
+                            <h3 class="text-white font-bold mb-4">Education</h3>
+                            <div class="space-y-6">
+                                <div class="relative border-l border-slate-700 pl-4">
+                                    <div class="absolute w-3 h-3 bg-primary rounded-full -left-[6.5px] top-1"></div>
+                                    <h4 class="text-white font-medium">BSc. Information Technology</h4>
+                                    <p class="text-sm text-slate-400">Meru University of Science & Tech</p>
+                                    <p class="text-xs text-slate-500 mt-1">2024 - 2028</p>
+                                </div>
+                                <div class="relative border-l border-slate-700 pl-4">
+                                    <div class="absolute w-3 h-3 bg-slate-600 rounded-full -left-[6.5px] top-1"></div>
+                                    <h4 class="text-white font-medium">KCSE Certificate</h4>
+                                    <p class="text-sm text-slate-400">Kalulini Boys High School</p>
+                                    <p class="text-xs text-slate-500 mt-1">2020 - 2023</p>
+                                </div>
+                                <div class="relative border-l border-slate-700 pl-4">
+                                    <div class="absolute w-3 h-3 bg-slate-600 rounded-full -left-[6.5px] top-1"></div>
+                                    <h4 class="text-white font-medium">KCPE Certificate</h4>
+                                    <p class="text-sm text-slate-400">Makokani Primary School</p>
+                                    <p class="text-xs text-slate-500 mt-1">2010 - 2019</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Skills Section (Page) -->
+        <section id="skills" class="page-section hidden min-h-[calc(100vh-4rem)] flex items-center justify-center py-10 fade-in">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+                
+                <!-- Section Header (Clean, no icons) -->
+                <h2 class="text-3xl font-bold text-white mb-12 flex items-center">
+                    <span class="text-primary mr-2 code-font">02.</span> Technical Skills
+                    <span class="h-px bg-slate-700 flex-grow ml-6"></span>
+                </h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Skill Card 1 -->
+                    <div class="bg-card p-6 rounded-xl border border-slate-700 hover:border-primary transition-all hover:-translate-y-1 group">
+                        <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 text-primary group-hover:bg-primary group-hover:text-dark transition-colors">
+                            <i class="fas fa-code text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">Development</h3>
+                        <ul class="text-slate-400 text-sm space-y-2">
+                            <li><i class="fas fa-check text-secondary mr-2"></i>Java, Python, Rust</li>
+                            <li><i class="fas fa-check text-secondary mr-2"></i>C++, C#</li>
+                            <li><i class="fas fa-check text-secondary mr-2"></i>Flutter & Mobile Dev</li>
+                            <li><i class="fas fa-check text-secondary mr-2"></i>HTML, CSS, JS</li>
+                        </ul>
+                    </div>
+
+                    <!-- Skill Card 2 -->
+                    <div class="bg-card p-6 rounded-xl border border-slate-700 hover:border-primary transition-all hover:-translate-y-1 group">
+                        <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 text-primary group-hover:bg-primary group-hover:text-dark transition-colors">
+                            <i class="fas fa-database text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">Data & Systems</h3>
+                        <ul class="text-slate-400 text-sm space-y-2">
+                            <li><i class="fas fa-check text-secondary mr-2"></i>MySQL, PostgreSQL</li>
+                            <li><i class="fas fa-check text-secondary mr-2"></i>MongoDB</li>
+                            <li><i class="fas fa-check text-secondary mr-2"></i>ERD Diagrams</li>
+                            <li><i class="fas fa-check text-secondary mr-2"></i>System Analysis</li>
+                        </ul>
+                    </div>
+
+                    <!-- Skill Card 3 -->
+                    <div class="bg-card p-6 rounded-xl border border-slate-700 hover:border-primary transition-all hover:-translate-y-1 group">
+                        <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 text-primary group-hover:bg-primary group-hover:text-dark transition-colors">
+                            <i class="fas fa-shield-alt text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">Infra & Security</h3>
+                        <ul class="text-slate-400 text-sm space-y-2">
+                            <li><i class="fas fa-check text-secondary mr-2"></i>Networking & Cloud</li>
+                            <li><i class="fas fa-check text-secondary mr-2"></i>Linux Tools (nmap)</li>
+                            <li><i class="fas fa-check text-secondary mr-2"></i>Cybersecurity</li>
+                            <li><i class="fas fa-check text-secondary mr-2"></i>Server Admin</li>
+                        </ul>
+                    </div>
+
+                    <!-- Skill Card 4 -->
+                    <div class="bg-card p-6 rounded-xl border border-slate-700 hover:border-primary transition-all hover:-translate-y-1 group">
+                        <div class="w-12 h-12 bg-primary/10 rounded-lg flex items-center justify-center mb-4 text-primary group-hover:bg-primary group-hover:text-dark transition-colors">
+                            <i class="fas fa-user-tie text-2xl"></i>
+                        </div>
+                        <h3 class="text-lg font-bold text-white mb-2">Professional</h3>
+                        <ul class="text-slate-400 text-sm space-y-2">
+                            <li><i class="fas fa-check text-secondary mr-2"></i>Project Presentation</li>
+                            <li><i class="fas fa-check text-secondary mr-2"></i>Problem Solving</li>
+                            <li><i class="fas fa-check text-secondary mr-2"></i>Team Leadership</li>
+                            <li><i class="fas fa-check text-secondary mr-2"></i>MS Office Suite</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Projects Section (Page) -->
+        <section id="projects" class="page-section hidden min-h-[calc(100vh-4rem)] flex items-center justify-center py-10 fade-in">
+            <div class="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 w-full">
+                
+                <!-- Section Header (Clean, no icons) -->
+                <h2 class="text-3xl font-bold text-white mb-12 flex items-center">
+                    <span class="text-primary mr-2 code-font">03.</span> Featured Projects
+                    <span class="h-px bg-slate-700 flex-grow ml-6"></span>
+                </h2>
+
+                <div class="flex flex-col items-center justify-center text-center py-10">
+                    <div class="w-24 h-24 bg-card rounded-full flex items-center justify-center mb-6 border border-slate-700 shadow-lg">
+                        <i class="fab fa-github-alt text-5xl text-slate-400"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-4">View My Code</h3>
+                    <p class="text-slate-400 text-lg max-w-2xl mb-8">
+                        I have developed various projects ranging from web applications to system administration scripts. 
+                        All my source code and latest experiments are available on my GitHub repository.
+                    </p>
+                    
+                    <a href="https://github.com/mutukustephen" target="_blank" class="inline-flex items-center px-8 py-4 bg-primary hover:bg-green-400 text-dark rounded-lg font-bold transition-all shadow-lg hover:shadow-primary/50 hover:-translate-y-1">
+                        <i class="fab fa-github mr-3 text-xl"></i>
+                        Visit My GitHub Profile
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section (Page) -->
+        <section id="contact" class="page-section hidden min-h-[calc(100vh-4rem)] flex items-center justify-center py-10 fade-in">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center w-full">
+                
+                <p class="text-primary code-font mb-4">04. What's Next?</p>
+                <h2 class="text-4xl md:text-5xl font-bold text-white mb-6">Get In Touch</h2>
+                
+                <p class="text-slate-400 text-lg mb-12 max-w-xl mx-auto">
+                    I'm currently looking for internship opportunities. Whether you have a question or just want to say hi, I'll try my best to get back to you!
+                </p>
+                
+                <div class="bg-card p-8 rounded-2xl border border-slate-700 max-w-md mx-auto shadow-2xl relative overflow-hidden">
+                    <!-- Decorative Top Bar for form -->
+                    <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary to-secondary"></div>
+                    
+                    <form onsubmit="event.preventDefault(); alert('Thanks for the message! This is a demo form.');" class="space-y-4">
+                        <div>
+                            <label class="block text-left text-sm font-medium text-slate-400 mb-1">Name</label>
+                            <input type="text" class="w-full bg-dark border border-slate-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors placeholder-slate-600" placeholder="Mutuku Stephen">
+                        </div>
+                        <div>
+                            <label class="block text-left text-sm font-medium text-slate-400 mb-1">Email</label>
+                            <input type="email" class="w-full bg-dark border border-slate-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors placeholder-slate-600" placeholder="mutukustephen624@gmail.com">
+                        </div>
+                        <div>
+                            <label class="block text-left text-sm font-medium text-slate-400 mb-1">Message</label>
+                            <textarea rows="4" class="w-full bg-dark border border-slate-600 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-primary focus:ring-1 focus:ring-primary transition-colors placeholder-slate-600" placeholder="Hello, I'd like to discuss..."></textarea>
+                        </div>
+                        <button type="submit" class="w-full bg-primary hover:bg-green-400 text-dark font-bold py-3 rounded-lg transition-all">
+                            Send Message <i class="fas fa-paper-plane ml-2"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="py-6 bg-dark border-t border-slate-800">
+        <div class="max-w-6xl mx-auto px-4 text-center">
+            <!-- Updated Footer Links to include all contact info -->
+            <div class="mb-4 flex justify-center gap-6">
+                <a href="https://github.com/mutukustephen" target="_blank" class="text-slate-500 hover:text-primary transition-colors text-xl" title="GitHub"><i class="fab fa-github"></i></a>
+                <a href="https://www.linkedin.com/in/mutukustephen624" target="_blank" class="text-slate-500 hover:text-primary transition-colors text-xl" title="LinkedIn"><i class="fab fa-linkedin"></i></a>
+                <a href="https://instagram.com/stephen_tux" target="_blank" class="text-slate-500 hover:text-primary transition-colors text-xl" title="Instagram"><i class="fab fa-instagram"></i></a>
+                <a href="https://wa.me/254797229461" target="_blank" class="text-slate-500 hover:text-primary transition-colors text-xl" title="WhatsApp"><i class="fab fa-whatsapp"></i></a>
+                <a href="tel:+254797229461" class="text-slate-500 hover:text-primary transition-colors text-xl" title="Call Me"><i class="fas fa-phone"></i></a>
+                <a href="mailto:mutukustephen624@gmail.com" class="text-slate-500 hover:text-primary transition-colors text-xl" title="Email Me"><i class="fas fa-envelope"></i></a>
+            </div>
+            <p class="text-slate-500 text-sm code-font">
+                Designed & Built by Mutuku Stephen <br>
+                <span class="text-xs">© 2025 All Rights Reserved.</span>
+            </p>
+        </div>
+    </footer>
+
+    <!-- Scripts -->
+    <script>
+        // Navigation Logic
+        function navigateTo(sectionId) {
+            document.querySelectorAll('.page-section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            const targetSection = document.getElementById(sectionId);
+            targetSection.classList.remove('hidden');
+            targetSection.classList.remove('fade-in');
+            void targetSection.offsetWidth;
+            targetSection.classList.add('fade-in');
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('text-primary', 'font-bold');
+                link.classList.add('text-slate-400', 'font-medium');
+            });
+            const activeBtn = document.getElementById(`nav-${sectionId}`);
+            if(activeBtn) {
+                activeBtn.classList.remove('text-slate-400', 'font-medium');
+                activeBtn.classList.add('text-primary', 'font-bold');
+            }
+            const mobileMenu = document.getElementById('mobile-menu');
+            if (!mobileMenu.classList.contains('hidden')) {
+                mobileMenu.classList.add('hidden');
+            }
+            window.scrollTo(0, 0);
+        }
+
+        function toggleMenu() {
+            const menu = document.getElementById('mobile-menu');
+            menu.classList.toggle('hidden');
+        }
+
+        // --- HERO TYPEWRITER LOGIC (Colorful Words) ---
+        const heroTypewriter = document.getElementById('hero-typewriter');
+        const heroWords = [
+            { text: "Web Applications", color: "text-primary" },
+            { text: "Secure Networks", color: "text-purple-500" },
+            { text: "Cloud Systems", color: "text-sky-500" },
+            { text: "Python Scripts", color: "text-yellow-500" },
+            { text: "Databases", color: "text-pink-500" }
+        ];
+        
+        let wordIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+        let typeDelay = 100;
+
+        function typeHeroText() {
+            const currentWord = heroWords[wordIndex];
+            
+            if (isDeleting) {
+                heroTypewriter.textContent = currentWord.text.substring(0, charIndex - 1);
+                charIndex--;
+                typeDelay = 50;
+            } else {
+                heroTypewriter.textContent = currentWord.text.substring(0, charIndex + 1);
+                charIndex++;
+                typeDelay = 150;
+            }
+
+            // Apply Color
+            heroTypewriter.className = `ml-2 font-bold border-b-2 border-transparent ${currentWord.color}`;
+
+            if (!isDeleting && charIndex === currentWord.text.length) {
+                isDeleting = true;
+                typeDelay = 2000; // Pause at end
+            } else if (isDeleting && charIndex === 0) {
+                isDeleting = false;
+                wordIndex = (wordIndex + 1) % heroWords.length;
+                typeDelay = 500;
+            }
+
+            setTimeout(typeHeroText, typeDelay);
+        }
+
+
+        // --- VS CODE TYPEWRITER LOGIC (Character-by-Character with Colors) ---
+        const codeContainer = document.getElementById('code-typewriter');
+        
+        // Structured data to allow character-by-character typing with preserved styles
+        const codeData = [
+            [
+                { text: "const", style: "syntax-keyword" }, 
+                { text: " " }, 
+                { text: "developer", style: "syntax-variable" }, 
+                { text: " = {" }
+            ],
+            [
+                { text: "  " },
+                { text: "name", style: "syntax-variable" },
+                { text: ": " },
+                { text: "'Mutuku Stephen'", style: "syntax-string" },
+                { text: "," }
+            ],
+            [
+                { text: "  " },
+                { text: "role", style: "syntax-variable" },
+                { text: ": " },
+                { text: "'Full Stack Dev'", style: "syntax-string" },
+                { text: "," }
+            ],
+            [
+                { text: "  " },
+                { text: "skills", style: "syntax-variable" },
+                { text: ": [" },
+                { text: "'Java'", style: "syntax-string" },
+                { text: ", " },
+                { text: "'Python'", style: "syntax-string" },
+                { text: "]," }
+            ],
+            [
+                { text: "  " },
+                { text: "hire", style: "syntax-function" },
+                { text: ": " },
+                { text: "async", style: "syntax-keyword" },
+                { text: " " },
+                { text: "function", style: "syntax-keyword" },
+                { text: "() {" }
+            ],
+            [
+                { text: "    " },
+                { text: "return", style: "syntax-keyword" },
+                { text: " " },
+                { text: "true", style: "syntax-boolean" },
+                { text: ";" }
+            ],
+            [
+                { text: "  }" }
+            ],
+            [{ text: "};" }]
+        ];
+
+        let lineIdx = 0;
+        let tokenIdx = 0;
+        let charIdx = 0;
+        let currentLineDiv = null;
+
+        function typeVSCode() {
+            // Create new line div if needed
+            if (tokenIdx === 0 && charIdx === 0) {
+                currentLineDiv = document.createElement('div');
+                codeContainer.appendChild(currentLineDiv);
+                
+                // Move cursor
+                const cursor = document.querySelector('#code-typewriter .cursor');
+                if(cursor) cursor.remove();
+                const newCursor = document.createElement('span');
+                newCursor.className = 'cursor';
+                currentLineDiv.appendChild(newCursor);
+            }
+
+            // Get current line tokens
+            const lineTokens = codeData[lineIdx];
+            const token = lineTokens[tokenIdx];
+
+            // Find or create the span for current token
+            let currentSpan = currentLineDiv.querySelector(`span[data-token="${tokenIdx}"]`);
+            if (!currentSpan) {
+                currentSpan = document.createElement('span');
+                if(token.style) currentSpan.className = token.style;
+                currentSpan.dataset.token = tokenIdx;
+                // Insert before cursor
+                currentLineDiv.insertBefore(currentSpan, currentLineDiv.lastChild); 
+            }
+
+            // Add character
+            currentSpan.textContent += token.text[charIdx];
+            charIdx++;
+
+            // Check logic
+            if (charIdx >= token.text.length) {
+                charIdx = 0;
+                tokenIdx++;
+                if (tokenIdx >= lineTokens.length) {
+                    tokenIdx = 0;
+                    lineIdx++;
+                    if (lineIdx >= codeData.length) {
+                        // Reset animation loop
+                        setTimeout(() => {
+                            codeContainer.innerHTML = '';
+                            lineIdx = 0;
+                            typeVSCode();
+                        }, 5000);
+                        return;
+                    }
+                }
+            }
+
+            setTimeout(typeVSCode, 30 + Math.random() * 50); // Random typing speed
+        }
+
+        // Initialize
+        window.onload = function() {
+            typeHeroText();
+            typeVSCode();
+            const homeBtn = document.getElementById('nav-home');
+            if(homeBtn) {
+                homeBtn.classList.remove('text-slate-400', 'font-medium');
+                homeBtn.classList.add('text-primary', 'font-bold');
+            }
+        }
+    </script>
+</body>
+</html>
