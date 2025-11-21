@@ -80,23 +80,6 @@
             from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        /* Chat Widget Animations */
-        .chat-slide-up {
-            animation: slideUp 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(20px) scale(0.95); }
-            to { opacity: 1; transform: translateY(0) scale(1); }
-        }
-        .typing-dot {
-            animation: typingBounce 1.4s infinite ease-in-out both;
-        }
-        .typing-dot:nth-child(1) { animation-delay: -0.32s; }
-        .typing-dot:nth-child(2) { animation-delay: -0.16s; }
-        @keyframes typingBounce {
-            0%, 80%, 100% { transform: scale(0); }
-            40% { transform: scale(1); }
-        }
         /* Markdown Styles for AI Chat */
         .prose p { margin-bottom: 0.5em; }
         .prose strong { color: #10B981; font-weight: bold; }
@@ -433,43 +416,6 @@
         </div>
     </footer>
 
-    <!-- FLOATING AI CHAT WIDGET -->
-    <div class="fixed bottom-6 right-6 z-50 flex flex-col items-end">
-        <!-- Chat Window -->
-        <div id="ai-chat-window" class="hidden bg-card border border-slate-700 rounded-2xl shadow-2xl w-80 sm:w-96 mb-4 overflow-hidden flex flex-col chat-slide-up" style="height: 500px; max-height: 80vh;">
-            <div class="bg-gradient-to-r from-secondary to-primary p-4 flex justify-between items-center">
-                <div class="flex items-center gap-2 text-white font-bold">
-                    <i class="fas fa-robot"></i>
-                    <span>Portfolio Assistant ✨</span>
-                </div>
-                <button onclick="toggleChat()" class="text-white/80 hover:text-white"><i class="fas fa-times"></i></button>
-            </div>
-            <div id="chat-messages" class="flex-grow overflow-y-auto p-4 space-y-4 bg-dark/50">
-                <div class="flex gap-3">
-                    <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary text-xs flex-shrink-0"><i class="fas fa-robot"></i></div>
-                    <div class="bg-card border border-slate-700 rounded-lg rounded-tl-none p-3 text-sm text-slate-300">
-                        Hi! I'm Stephen's AI assistant. Ask me anything about his skills, education, or projects!
-                    </div>
-                </div>
-            </div>
-            <div class="p-3 bg-card border-t border-slate-700">
-                <form onsubmit="handleChatSubmit(event)" class="flex gap-2">
-                    <input type="text" id="chat-input" placeholder="Ask about Stephen..." class="flex-grow bg-dark border border-slate-600 rounded-lg px-3 py-2 text-sm text-white focus:outline-none focus:border-primary">
-                    <button type="submit" class="bg-primary hover:bg-green-600 text-dark rounded-lg px-3 py-2 transition-colors"><i class="fas fa-paper-plane"></i></button>
-                </form>
-            </div>
-        </div>
-        
-        <!-- Floating Button -->
-        <button onclick="toggleChat()" class="bg-gradient-to-r from-secondary to-primary hover:from-indigo-600 hover:to-green-600 text-white p-4 rounded-full shadow-xl transition-all hover:scale-110 group relative">
-            <i class="fas fa-comment-dots text-2xl"></i>
-            <span class="absolute top-0 right-0 flex h-3 w-3">
-              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-white opacity-75"></span>
-              <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
-            </span>
-        </button>
-    </div>
-
     <!-- Scripts -->
     <script>
         // === GEMINI API CONFIGURATION ===
@@ -624,73 +570,6 @@
             
             messageInput.value = polishedMessage.trim();
             messageInput.disabled = false;
-        }
-
-        // === AI CHATBOT LOGIC ===
-        function toggleChat() {
-            const chatWindow = document.getElementById('ai-chat-window');
-            chatWindow.classList.toggle('hidden');
-            if(!chatWindow.classList.contains('hidden')) {
-                document.getElementById('chat-input').focus();
-            }
-        }
-
-        async function handleChatSubmit(e) {
-            e.preventDefault();
-            const input = document.getElementById('chat-input');
-            const messages = document.getElementById('chat-messages');
-            const userText = input.value.trim();
-            if(!userText) return;
-
-            // Add User Message
-            messages.innerHTML += `
-                <div class="flex gap-3 flex-row-reverse">
-                    <div class="w-8 h-8 rounded-full bg-slate-600 flex items-center justify-center text-white text-xs flex-shrink-0"><i class="fas fa-user"></i></div>
-                    <div class="bg-primary text-dark font-medium rounded-lg rounded-tr-none p-3 text-sm max-w-[80%]">
-                        ${userText}
-                    </div>
-                </div>`;
-            input.value = '';
-            messages.scrollTop = messages.scrollHeight;
-
-            // Add Loading Indicator
-            const loadingId = 'loading-' + Date.now();
-            messages.innerHTML += `
-                <div id="${loadingId}" class="flex gap-3">
-                    <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary text-xs flex-shrink-0"><i class="fas fa-robot"></i></div>
-                    <div class="bg-card border border-slate-700 rounded-lg rounded-tl-none p-4 text-sm text-slate-300 flex gap-1">
-                        <div class="w-2 h-2 bg-slate-400 rounded-full typing-dot"></div>
-                        <div class="w-2 h-2 bg-slate-400 rounded-full typing-dot"></div>
-                        <div class="w-2 h-2 bg-slate-400 rounded-full typing-dot"></div>
-                    </div>
-                </div>`;
-            messages.scrollTop = messages.scrollHeight;
-
-            // Call Gemini
-            const systemPrompt = `You are the AI Assistant for Mutuku Stephen's portfolio. 
-            Here is Stephen's context:
-            - Name: Stephen Nthiwa Mutuku
-            - Education: BSc Information Technology at Meru University (2024-2028).
-            - Skills: Java, Python, Web Dev (HTML/CSS/JS), Database (MySQL), Networking, Flutter.
-            - Experience: Student, member of Statistics Club, participated in Course Registration Project.
-            - Contact: mutukustephen624@gmail.com, 0797229461.
-            - Tone: Professional, concise, friendly, helpful.
-            - Goal: Encourage users to hire him for internships.
-            
-            Answer the user's question based on this info. Keep answers short (under 50 words) unless asked for detail.`;
-
-            const responseText = await callGemini(userText, systemPrompt);
-
-            // Remove Loading & Add AI Response
-            document.getElementById(loadingId).remove();
-            messages.innerHTML += `
-                <div class="flex gap-3">
-                    <div class="w-8 h-8 rounded-full bg-primary/20 flex items-center justify-center text-primary text-xs flex-shrink-0"><i class="fas fa-robot"></i></div>
-                    <div class="bg-card border border-slate-700 rounded-lg rounded-tl-none p-3 text-sm text-slate-300 prose prose-invert max-w-[85%]">
-                        ${marked.parse(responseText)}
-                    </div>
-                </div>`;
-            messages.scrollTop = messages.scrollHeight;
         }
 
         // Initialize
